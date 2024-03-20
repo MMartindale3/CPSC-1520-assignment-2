@@ -9,31 +9,31 @@
 </tr> 
 */
 
-let albumsStore
+
 async function appInit() {
   const response = await fetch("public/albums.json");
   const albums = await response.json();
   const albumsArray = albums;
-  const albumsStore = [...albumsArray];
+  const albumsStore = [...albumsArray]; // where should I store this??
 
   render(albums, document.querySelector("tbody"))
 }
+let albumsStore
 
 function render(data, container) {
-  console.table(data)
-  // data.forEach(element => {
-  //   const template = `
-  //   <tr>
-  //     <td>${albumsStore.album}</td>
-  //     <td>${artistName}</td>
-  //     <td>${releaseDate}</td>
-  //     <td>${genres}</td>
-  //     <td>${averageRating}</td>
-  //     <td>${numberRatings}</td>
-  //   </tr>
-  //   `
-  //   container.insertAdjacentHTML("beforeend", template)
-  // });
+  data.forEach(albums => {
+    const template = `
+    <tr>
+      <td>${albums.album}</td>
+      <td>${albums.artistName}</td>
+      <td>${albums.releaseDate}</td>
+      <td>${albums.genres}</td>
+      <td>${albums.averageRating}</td>
+      <td>${albums.numberRatings}</td>
+    </tr>
+    `
+    container.insertAdjacentHTML("beforeend", template)
+  });
 }
 appInit();
 
