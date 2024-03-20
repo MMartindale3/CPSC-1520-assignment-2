@@ -25,8 +25,8 @@ function render(data, container) {
     const template = `
     <tr>
       <td>${albums.album}</td>
-      <td>${albums.artistName}</td>
       <td>${albums.releaseDate}</td>
+      <td>${albums.artistName}</td>
       <td>${albums.genres}</td>
       <td>${albums.averageRating}</td>
       <td>${albums.numberRatings}</td>
