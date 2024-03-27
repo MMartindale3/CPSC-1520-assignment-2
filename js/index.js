@@ -13,10 +13,9 @@ let albumStore
 async function appInit() {
   const response = await fetch("public/albums.json");
   const data = await response.json();
-  albumStore = [...data]
+  albumStore = [...data];
 
-  render(data, document.querySelector("tbody"))
-  getAlbumsByQuery(data);
+  render(data, document.querySelector("tbody"));
 }
 
 function render(data, container) {
@@ -36,28 +35,31 @@ function render(data, container) {
 }
 appInit();
 
-
-
 const filterForm = document.querySelector("#album-search-form");
 
-filterForm.addEventListener("submit", getAlbumsByQuery);
-function getAlbumsByQuery(data) {
-  const albums = data;
-  const queryText = document.querySelector("#search-input");
-  const queryRating = document.querySelector("#min-album-rating-input");
-  
-  const results = albums.filter((album) => {
-    if (album.album === queryText) {
-      return album;
-    }
-  })
-  filter((album) => {
-    if (album.averageRating === queryRating) {
-      return album;
-    }
-  })
-
-  render(results, document.querySelector("tbody"))
-  
+filterForm.addEventListener("submit", onFilterRequest);
+function onFilterRequest(e) {
+  e.preventDefault();
+  const formData = FormData(e.currentTarget);
+  const query = formData.get("query").trim().toLowerCase; // this might be the problem. I'm searching for 2 things at once 
+  filterAlbumByText(query);
+  filterByRating(query);
 }
+
+function filterAlbumByText(queryString) {
+  const results = data.filter((album) => {
+      const albumTitle = album.album.toLowerCase();
+      return albumTitle.includes(queryString);
+  })
+}
+
+function filterByRating(queryString) {
+  const results = data.filter((album) => {
+    const albumRating = album.averageRating.toLowerCase();
+    if (albumRating >= queryString) {
+      return albumRating.includes(queryString);
+    }
+})
+}
+
 
