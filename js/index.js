@@ -8,28 +8,27 @@
   <td>NUMBER OF RATINGS HERE</td>
 </tr> 
 */
-
+let albumStore
 
 async function appInit() {
   const response = await fetch("public/albums.json");
-  const albums = await response.json();
-  const albumsArray = albums;
-  const albumsStore = [...albumsArray]; // where should I store this??
+  const data = await response.json();
+  albumStore = [...data]
 
-  render(albums, document.querySelector("tbody"))
+  render(data, document.querySelector("tbody"))
 }
-let albumsStore
+
 
 function render(data, container) {
-  data.forEach(albums => {
+  data.forEach(data => {
     const template = `
     <tr>
-      <td>${albums.album}</td>
-      <td>${albums.releaseDate}</td>
-      <td>${albums.artistName}</td>
-      <td>${albums.genres}</td>
-      <td>${albums.averageRating}</td>
-      <td>${albums.numberRatings}</td>
+      <td>${data.album}</td>
+      <td>${data.releaseDate}</td>
+      <td>${data.artistName}</td>
+      <td>${data.genres}</td>
+      <td>${data.averageRating}</td>
+      <td>${data.numberRatings}</td>
     </tr>
     `
     container.insertAdjacentHTML("beforeend", template)
