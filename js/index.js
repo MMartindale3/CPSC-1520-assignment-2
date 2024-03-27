@@ -16,8 +16,8 @@ async function appInit() {
   albumStore = [...data]
 
   render(data, document.querySelector("tbody"))
+  getAlbumsByQuery(data);
 }
-
 
 function render(data, container) {
   data.forEach(data => {
@@ -35,4 +35,29 @@ function render(data, container) {
   });
 }
 appInit();
+
+
+
+const filterForm = document.querySelector("#album-search-form");
+
+filterForm.addEventListener("submit", getAlbumsByQuery);
+function getAlbumsByQuery(data) {
+  const albums = data;
+  const queryText = document.querySelector("#search-input");
+  const queryRating = document.querySelector("#min-album-rating-input");
+  
+  const results = albums.filter((album) => {
+    if (album.album === queryText) {
+      return album;
+    }
+  })
+  filter((album) => {
+    if (album.averageRating === queryRating) {
+      return album;
+    }
+  })
+
+  render(results, document.querySelector("tbody"))
+  
+}
 
