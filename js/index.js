@@ -48,16 +48,16 @@ function onFilterRequest(e) {
 
 function filterAlbumByText(queryString) {
   const results = data.filter((album) => {
-      const albumTitle = album.album.toLowerCase();
-      return albumTitle.includes(queryString);
+      const album = album.album.toLowerCase();
+      return album.includes(queryString);
   })
 }
 
 function filterByRating(queryString) {
   const results = data.filter((album) => {
-    const albumRating = album.averageRating.toLowerCase();
-    if (albumRating >= queryString) {
-      return albumRating.includes(queryString);
+    const averageRating = album.averageRating.toLowerCase();
+    if (averageRating >= queryString) {
+      return averageRating.includes(queryString);
     }
 })
 }
