@@ -8,26 +8,28 @@
   <td>NUMBER OF RATINGS HERE</td>
 </tr> 
 */
-let albumStore
+let albumDataStore
 
 async function appInit() {
   const response = await fetch("public/albums.json");
-  const data = await response.json();
-  albumStore = [...data];
-  render(data, document.querySelector("tbody"));
-  
+  const fetchData = await response.json();
+  albumDataStore = [...fetchData];
+
+  render(albumDataStore, document.querySelector("tbody"));
+
+  filterDataFunction();
 }
 
 function render(data, container) {
-  data.forEach(data => {
+  albumDataStore.forEach(albumDataStore => {
     const template = `
     <tr>
-      <td>${data.album}</td>
-      <td>${data.releaseDate}</td>
-      <td>${data.artistName}</td>
-      <td>${data.genres}</td>
-      <td>${data.averageRating}</td>
-      <td>${data.numberRatings}</td>
+      <td>${albumDataStore.album}</td>
+      <td>${albumDataStore.releaseDate}</td>
+      <td>${albumDataStore.artistName}</td>
+      <td>${albumDataStore.genres}</td>
+      <td>${albumDataStore.averageRating}</td>
+      <td>${albumDataStore.numberRatings}</td>
     </tr>
     `
     container.insertAdjacentHTML("beforeend", template)
@@ -35,28 +37,31 @@ function render(data, container) {
 }
 appInit();
 
-const filterForm = document.querySelector("#album-search-form");
-const searchInput = document.querySelector("#search-input");
-const ratingInput = document.querySelector("#min-album-rating-input");
+document.querySelector("#album-search-form").addEventListener("submit", onAlbumFilterRequest);
 
-filterForm.addEventListener("submit", onFilterRequest);
-function onFilterRequest(data) {
+function onAlbumFilterRequest(e) {
   e.preventDefault();
-  const albums = data;
-  const results = albums.filter((album) => {
-    if (album.album.includes(searchInput)) {
-      return album;
-    }
-  }).filter((album) => {
-    if (album.averageRating >= ratingInput) {
-      return album;
-    }
-  })
-
-  console.log(results);
-  
+  console.log(e.currentTarget);
+  const formData = new FormData(e.currentTarget); //uses the name attribute because it uses the name value pairs
+  const searchAlbum = formData.get("search").trim().toLowerCase();
+  const searchMinRating = formData.get("min-album-rating").trim().toLowerCase();
+  filterDataFunction(searchAlbum, searchMinRating);
 }
 
+function filterDataFunction(searchString, searchMinRating) {
+  const results = albumDataStore
+    .filter((album) => {
+      const albumTitle = album.album.toLowerCase();
+      return albumTitle.includes(searchString);
+    })
+    .filter((album) => {
+      const albumRating = album.averageRating;
+      return albumRating >= searchMinRating;
+    })
+  console.log(results);
+  render(results, document.querySelector("tbody"));
+
+}
 
 
 
