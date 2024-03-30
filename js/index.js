@@ -17,7 +17,6 @@ async function appInit() {
 
   render(albumDataStore, document.querySelector("tbody"));
 
-  filterDataFunction();
 }
 
 function render(data, container) {
@@ -35,6 +34,7 @@ function render(data, container) {
     container.insertAdjacentHTML("beforeend", template)
   });
 }
+
 appInit();
 
 document.querySelector("#album-search-form").addEventListener("submit", onAlbumFilterRequest);
@@ -48,6 +48,7 @@ function onAlbumFilterRequest(e) {
   filterDataFunction(searchAlbum, searchMinRating);
 }
 
+
 function filterDataFunction(searchString, searchMinRating) {
   const results = albumDataStore
     .filter((album) => {
@@ -58,11 +59,24 @@ function filterDataFunction(searchString, searchMinRating) {
       const albumRating = album.averageRating;
       return albumRating >= searchMinRating;
     })
-  console.log(results);
-  render(results, document.querySelector("tbody"));
+  document.querySelector("tbody").replaceChildren();
 
+  console.log(results);
+  renderResults(results, document.querySelector("tbody"));
 }
 
-
-
-
+function renderResults(data, container) {
+  data.forEach(results => {
+    const template = `
+      <tr>
+        <td>${results.album}</td>
+        <td>${results.releaseDate}</td>
+        <td>${results.artistName}</td>
+        <td>${results.genres}</td>
+        <td>${results.averageRating}</td>
+        <td>${results.numberRatings}</td>
+      </tr>
+      `
+    container.insertAdjacentHTML("beforeend", template)
+  });
+}
