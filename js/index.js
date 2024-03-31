@@ -20,7 +20,7 @@ async function appInit() {
 }
 
 function render(data, container) {
-  albumDataStore.forEach(albumDataStore => {
+  data.forEach(albumDataStore => {
     const template = `
     <tr>
       <td>${albumDataStore.album}</td>
@@ -41,25 +41,24 @@ document.querySelector("#album-search-form").addEventListener("submit", onAlbumF
 
 function onAlbumFilterRequest(e) {
   e.preventDefault();
-  console.log(e.currentTarget);
-  const formData = new FormData(e.currentTarget); //uses the name attribute because it uses the name value pairs
-  const searchAlbum = formData.get("search").trim().toLowerCase();
+  const formData = new FormData(e.currentTarget); // uses the name attribute for name value pairs
+  const searchAlbum = formData.get("search").trim().toLowerCase(); // sanitize the search
   const searchMinRating = formData.get("min-album-rating").trim().toLowerCase();
   filterDataFunction(searchAlbum, searchMinRating);
 }
 
 
 function filterDataFunction(searchString, searchMinRating) {
-  const results = albumDataStore
+  const results = albumDataStore // daisy-chained filter options
     .filter((album) => {
-      const albumTitle = album.album.toLowerCase();
+      const albumTitle = album.album.toLowerCase(); // sanitize the results
       return albumTitle.includes(searchString);
     })
     .filter((album) => {
       const albumRating = album.averageRating;
       return albumRating >= searchMinRating;
     })
-  document.querySelector("tbody").replaceChildren();
+  document.querySelector("tbody").replaceChildren(); // I couldn't get the table to clear without this. 
 
   console.log(results);
   renderResults(results, document.querySelector("tbody"));
