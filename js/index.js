@@ -44,12 +44,14 @@ function onAlbumFilterRequest(e) {
   const formData = new FormData(e.currentTarget); // uses the name attribute for name value pairs
   const searchAlbum = formData.get("search").trim().toLowerCase(); // sanitize the search
   const searchMinRating = formData.get("min-album-rating").trim().toLowerCase();
-  filterDataFunction(searchAlbum, searchMinRating);
+  filterArtistFunction(searchAlbum, searchMinRating);
+  filterTitleFunction(searchAlbum, searchMinRating);
+
 }
 
 
-function filterDataFunction(searchString, searchMinRating) {
-  const results = albumDataStore // daisy-chained filter options
+function filterTitleFunction(searchString, searchMinRating) {
+  const results = albumDataStore
     .filter((album) => {
       const albumTitle = album.album.toLowerCase(); // sanitize the results
       return albumTitle.includes(searchString);
@@ -63,6 +65,23 @@ function filterDataFunction(searchString, searchMinRating) {
   console.log(results);
   renderResults(results, document.querySelector("tbody"));
 }
+
+function filterArtistFunction(searchString, searchMinRating) {
+  const results = albumDataStore
+    .filter((album) => {
+      const artistName = album.artistName.toLowerCase(); // sanitize the results
+      return artistName.includes(searchString);
+    })
+    .filter((album) => {
+      const albumRating = album.averageRating;
+      return albumRating >= searchMinRating;
+    })
+  document.querySelector("tbody").replaceChildren(); // I couldn't get the table to clear without this. 
+
+  console.log(results);
+  renderResults(results, document.querySelector("tbody"));
+}
+
 
 function renderResults(data, container) {
   data.forEach(results => {
